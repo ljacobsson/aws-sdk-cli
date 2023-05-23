@@ -1,6 +1,6 @@
 {
   "name": "aws-sdk-v3-cli",
-  "version": "1.0.8",
+  "version": "1.0.9",
   "description": "CLI tool that helps you find the right AWS SDK client for your use case",
   "main": "index.js",
   "type": "module",
