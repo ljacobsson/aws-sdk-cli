@@ -51,7 +51,7 @@ async function searchReadmeFiles(nocache) {
       const readmeContent = Buffer.from(readme.data.content, 'base64').toString();
       return {
         name: `@aws-sdk/${file.name}`,
-        value: { name: file.name, readme: readmeContent },
+        value: { name: `@aws-sdk/${file.name}`, readme: readmeContent },
       };
     });
     choices = await Promise.all(fileChoices);
