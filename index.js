@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 import { program } from 'commander';
 import { Octokit } from '@octokit/rest';
 import * as input from "./src/inputUtil.js";
