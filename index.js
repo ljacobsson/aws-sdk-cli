@@ -6,8 +6,7 @@ import * as shell from 'shelljs';
 import * as fs from "fs"
 import * as os from "os"
 import * as path from "path"
-
-const pkg = JSON.parse(fs.readFileSync(path.join(__dirname, "package.json")).toString("utf-8"));
+const pkg = JSON.parse(fs.readFileSync(path.join("package.json")).toString("utf-8"));
 program
   .version(pkg.version)
   .description('AWS SDK v3 CLI');
