@@ -23,7 +23,7 @@
   "bin": {
     "awssdk": "index.js"
   },
-  repository": {
+  "repository": {
     "type": "git",
     "url": "git+https://github.com/ljacobsson/aws-sdk-cli.git"
   },
@@ -31,5 +31,4 @@
   "bugs": {
     "url": "https://github.com/ljacobsson/aws-sdk-cli/issues"
   },
-
 }
