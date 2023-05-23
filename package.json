@@ -1,13 +1,13 @@
 {
   "name": "aws-sdk-v3-cli",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "CLI tool that helps you find the right AWS SDK client for your use case",
   "main": "index.js",
   "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "",
+  "author": "ljacobsson",
   "license": "ISC",
   "publishConfig": {
     "access": "public"
