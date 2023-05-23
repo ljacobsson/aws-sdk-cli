@@ -1,6 +1,6 @@
 {
   "name": "aws-sdk-cli",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "CLI tool that helps you find the right AWS SDK client for your use case",
   "main": "index.js",
   "type": "module",
@@ -21,6 +21,15 @@
     "shelljs": "^0.8.5"
   },
   "bin": {
-    "awssdk": "./index.js"
-  }
+    "awssdk": "index.js"
+  },
+  repository": {
+    "type": "git",
+    "url": "git+https://github.com/ljacobsson/aws-sdk-cli.git"
+  },
+  "homepage": "https://github.com/ljacobsson/aws-sdk-cli#readme",
+  "bugs": {
+    "url": "https://github.com/ljacobsson/aws-sdk-cli/issues"
+  },
+
 }
