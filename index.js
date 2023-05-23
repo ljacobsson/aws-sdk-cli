@@ -16,15 +16,15 @@ program
   .description('AWS SDK v3 CLI');
 
 program
-.option('--no-cache', 'Use cached results', false)
+.option('--no-cache', 'Use cached results', true)
 .action((cmd) => {
-    console.log('Search keyword:', cmd.query);
-    searchReadmeFiles(cmd.cached);
+    console.log('Search keyword:', cmd);
+    searchReadmeFiles(cmd.cache);
   })
   .parse(process.argv);
 
 
-async function searchReadmeFiles(nocache) {
+async function searchReadmeFiles(cache) {
   if (!process.env.GITHUB_TOKEN) {
     console.log("Please set GITHUB_TOKEN environment variable. Create one here https://github.com/settings/tokens");
     process.exit(1);
@@ -32,10 +32,10 @@ async function searchReadmeFiles(nocache) {
   const octokit = new Octokit({ auth: process.env.GITHUB_TOKEN });
 
   const cachePath = path.join(os.homedir(), ".aws-sdk-cli", "cache.json");
-  let choices;
-  if (fs.existsSync(cachePath) && !nocache) {
+  let choice;
+  if (fs.existsSync(cachePath) && cache) {
     console.log("Using cached results. To refresh, run with --no-cache");
-    choices = JSON.parse(fs.readFileSync(cachePath).toString("utf-8"));
+    choice = JSON.parse(fs.readFileSync(cachePath).toString("utf-8"));
   } else {
     const response = await octokit.repos.getContent({
       owner: 'aws',
@@ -58,13 +58,13 @@ async function searchReadmeFiles(nocache) {
         value: { name: `@aws-sdk/${file.name}`, readme: readmeContent },
       };
     });
-    choices = await Promise.all(fileChoices);
+    choice = await Promise.all(fileChoices);
     if (!fs.existsSync(path.dirname(cachePath))) {
       fs.mkdirSync(path.dirname(cachePath), { recursive: true });
     }
-    fs.writeFileSync(cachePath, JSON.stringify(choices));
+    fs.writeFileSync(cachePath, JSON.stringify(choice));
   }
-  const selectedClient = await input.default.autocomplete('Search client:', choices);
+  const selectedClient = await input.default.autocomplete('Search client:', choice);
 
 
   const npmCommand = `npm install ${selectedClient.name}`;
