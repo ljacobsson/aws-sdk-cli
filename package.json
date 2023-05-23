@@ -1,6 +1,6 @@
 {
   "name": "aws-sdk-cli",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "CLI tool that helps you find the right AWS SDK client for your use case",
   "main": "index.js",
   "type": "module",
@@ -17,7 +17,6 @@
     "commander": "^10.0.1",
     "inquirer": "^7.0.4",
     "inquirer-autocomplete-prompt": "^1.3.0",
-    "octokit": "^2.0.18",
     "shelljs": "^0.8.5"
   },
   "bin": {
