@@ -17,7 +17,7 @@ Before using this CLI tool, make sure you have the following:
 To install the tool, run the following command:
 
 ```shell
-npm install -g aws-sdk-cli
+npm install -g aws-sdk-v3-cli
 ```
 
 ## Usage
@@ -25,7 +25,7 @@ npm install -g aws-sdk-cli
 Run the CLI tool using the following command:
 
 ```shell
-aws-sdk [options]
+awssdk [options]
 ```
 
 ### Options
@@ -37,7 +37,7 @@ The CLI tool supports the following options:
 ### Example
 
 ```shell
-aws-sdk --no-cache
+awssdk --no-cache
 ```
 
 ## License
