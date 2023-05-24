@@ -18,7 +18,7 @@ program
 program
 .option('--no-cache', 'Use cached results', true)
 .action((cmd) => {
-    console.log('Search keyword:', cmd);
+
     searchReadmeFiles(cmd.cache);
   })
   .parse(process.argv);
