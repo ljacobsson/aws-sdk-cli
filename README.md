@@ -4,6 +4,7 @@ The AWS SDK v3 for Javascript is becoming the standard SDK for Javascript develo
 
 This is a command-line interface (CLI) tool for the AWS SDK v3. It allows you to search for aws-sdk-js service clients using free text search.
 
+![Demo](images/demo.gif)
 ## Prerequisites
 
 Before using this CLI tool, make sure you have the following:
