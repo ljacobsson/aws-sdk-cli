@@ -84,9 +84,10 @@ async function searchReadmeFiles(cache, devMode) {
     choices.unshift({ name: bundle.name, value: { name: bundle.packages.join(" "), readme: bundle.keywords.join(" ") } });
   }
 
-  choices.unshift(new inq.Separator("Bundles"))
+  choices.unshift(new inq.Separator("Bundles"));
 
-  console.log("Searches README.md files for the given search terms. For example, 'dynamodb' will return all clients that have 'dynamodb' in the README.md file. For exact search terms, use quotes, e.g. '\"dynamodb\"' will return only clients that have 'dynamodb' in their name.");
+  console.log("Tip: Use quotes to search for exact matches. Example: \"dynamodb\"");
+  
   const selectedClient = await input.default.autocomplete('Enter search:', choices);
 
   const npmCommand = `npm install ${selectedClient.name} ${devMode ? "--save-dev" : "--save"}`;
