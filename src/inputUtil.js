@@ -1,5 +1,5 @@
-import * as inquirer from "inquirer";
 import * as auto from "inquirer-autocomplete-prompt";
+import * as inquirer from "inquirer";
 
 const inq = inquirer.default;
 
@@ -22,7 +22,14 @@ async function choices(message, items, type, defaults, pageSize = 5) {
           return items;
         }
 
-        const split = input.split(" ");
+        if (input.startsWith("\"")) {
+          input = input.replace(/\"/g, "");
+          return items.filter(
+            (p) =>
+              !p.value || p.value.name.toLowerCase().includes(input.toLowerCase()));
+        }
+
+        const split = input.split(" ");        
         return items.filter(
           (p) =>
             !p.value ||
@@ -47,7 +54,7 @@ async function files(message) {
 
 async function text(message, defaultValue) {
   return (
-    await inq.default.promptprompt({
+    await inq.prompt({
       type: "input",
       name: "text",
       default: defaultValue,

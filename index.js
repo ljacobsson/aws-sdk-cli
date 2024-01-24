@@ -7,6 +7,10 @@ import * as fs from "fs"
 import * as os from "os"
 import * as path from "path"
 import { fileURLToPath } from 'url';
+import * as inquirer from "inquirer";
+import { bundles } from "./src/bundles.js";
+const inq = inquirer.default;
+
 const __filename = fileURLToPath(import.meta.url);
 
 const __dirname = path.dirname(__filename);
@@ -16,8 +20,8 @@ program
   .description('AWS SDK v3 CLI');
 
 program
-.option('--no-cache', 'Use cached results', true)
-.action((cmd) => {
+  .option('--no-cache', 'Use cached results', true)
+  .action((cmd) => {
 
     searchReadmeFiles(cmd.cache);
   })
@@ -25,17 +29,27 @@ program
 
 
 async function searchReadmeFiles(cache) {
-  if (!process.env.GITHUB_TOKEN) {
+  const token = fs.existsSync(os.homedir() + "/.aws-sdk-cli/token") ? fs.readFileSync(os.homedir() + "/.aws-sdk-cli/token").toString("utf-8") : process.env.GITHUB_TOKEN;
+
+  if (!token) {
     console.log("Please set GITHUB_TOKEN environment variable. Create one here https://github.com/settings/tokens");
-    process.exit(1);
+    const token = await input.default.text("...or enter a GitHub token here (public repo read access is enough):");
+    if (!token || token.length === 0) {
+      process.exit(1);
+    } else {
+      if (!fs.existsSync(os.homedir() + "/.aws-sdk-cli")) {
+        fs.mkdirSync(os.homedir() + "/.aws-sdk-cli");
+      }
+      fs.writeFileSync(os.homedir() + "/.aws-sdk-cli/token", token);
+    }
   }
   const octokit = new Octokit({ auth: process.env.GITHUB_TOKEN });
 
   const cachePath = path.join(os.homedir(), ".aws-sdk-cli", "cache.json");
-  let choice;
+  let choices;
   if (fs.existsSync(cachePath) && cache) {
     console.log("Using cached results. To refresh, run with --no-cache");
-    choice = JSON.parse(fs.readFileSync(cachePath).toString("utf-8"));
+    choices = JSON.parse(fs.readFileSync(cachePath).toString("utf-8"));
   } else {
     const response = await octokit.repos.getContent({
       owner: 'aws',
@@ -58,14 +72,22 @@ async function searchReadmeFiles(cache) {
         value: { name: `@aws-sdk/${file.name}`, readme: readmeContent },
       };
     });
-    choice = await Promise.all(fileChoices);
+    choices = await Promise.all(fileChoices);
     if (!fs.existsSync(path.dirname(cachePath))) {
       fs.mkdirSync(path.dirname(cachePath), { recursive: true });
     }
-    fs.writeFileSync(cachePath, JSON.stringify(choice));
+    fs.writeFileSync(cachePath, JSON.stringify(choices));
   }
-  const selectedClient = await input.default.autocomplete('Search client:', choice);
 
+  choices.unshift(new inq.Separator("Clients"))
+  for (const bundle of bundles) {
+    choices.unshift({ name: bundle.name, value: { name: bundle.packages.join(" "), readme: bundle.keywords.join(" ") } });
+  }
+
+  choices.unshift(new inq.Separator("Bundles"))
+
+  console.log("Searches README.md files for the given search terms. For example, 'dynamodb' will return all clients that have 'dynamodb' in the README.md file. For exact search terms, use quotes, e.g. '\"dynamodb\"' will return only clients that have 'dynamodb' in their name.");
+  const selectedClient = await input.default.autocomplete('Enter search:', choices);
 
   const npmCommand = `npm install ${selectedClient.name}`;
   console.log(`Running '${npmCommand}'`);
