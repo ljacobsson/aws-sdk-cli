@@ -21,14 +21,14 @@ program
 
 program
   .option('--no-cache', 'Use cached results', true)
+  .option('-D --dev', 'Install as dev dependency', false)
   .action((cmd) => {
-
-    searchReadmeFiles(cmd.cache);
+    searchReadmeFiles(cmd.cache, cmd.dev);
   })
   .parse(process.argv);
 
 
-async function searchReadmeFiles(cache) {
+async function searchReadmeFiles(cache, devMode) {
   const token = fs.existsSync(os.homedir() + "/.aws-sdk-cli/token") ? fs.readFileSync(os.homedir() + "/.aws-sdk-cli/token").toString("utf-8") : process.env.GITHUB_TOKEN;
 
   if (!token) {
@@ -89,7 +89,7 @@ async function searchReadmeFiles(cache) {
   console.log("Searches README.md files for the given search terms. For example, 'dynamodb' will return all clients that have 'dynamodb' in the README.md file. For exact search terms, use quotes, e.g. '\"dynamodb\"' will return only clients that have 'dynamodb' in their name.");
   const selectedClient = await input.default.autocomplete('Enter search:', choices);
 
-  const npmCommand = `npm install ${selectedClient.name}`;
+  const npmCommand = `npm install ${selectedClient.name} ${devMode ? "--save-dev" : "--save"}`;
   console.log(`Running '${npmCommand}'`);
   shell.default.exec(npmCommand);
 
